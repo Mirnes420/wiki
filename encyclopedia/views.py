@@ -105,39 +105,16 @@ def edit_entry(request):
         "title": title, 
         "entry": entry
         })
-    else:
-        title = request.GET.get('t')
-        entry = request.GET.get('e')
+    elif request.method == "POST" :
+        title = request.POST.get('t')
+        entry = request.POST.get('e')
+        entry = "# " + title + f"\n\n" + entry
         util.save_entry(title, entry)
-        return HttpResponseRedirect(reverse("index"))
-
-
-"""class AddPageForm(forms.Form):
-    title = forms.CharField(max_length=20)
-    entry = forms.CharField(widget=forms.Textarea(
-        attrs={
-            "class": "form-control",
-            "placeholder": "Tell us more!"
-            })
-
-     
-def edit_page(request, title):
-    entry = util.get_entry(title)
-    if request.method == "POST":
-        form = AddPageForm(request.POST, initial={
-                "title": NewTitle,
-                "entry": NewContent
-                })
-        
-        if form.is_valid():
-            util.save_entry(title, entry)
-            return render(request, "encyclopedia/edit.html", {
-            "title":title
-            )}
-
-        else:
-            form = AddPageForm()
-            return render(request, "encyclopedia/editpage.html", {"form":form})"""
+        return render(request, "encyclopedia/entries.html", {
+        "title": title, 
+        "entry": entry
+        })
+      
 
 def delete_entry(request):
     prev_url =  request.META.get('HTTP_REFERER').replace("%20", " ").split("/")

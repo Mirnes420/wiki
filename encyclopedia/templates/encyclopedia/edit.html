@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block body %}
-<form action="{% url 'edit' %}" method="post" action="">
+<form action="{% url 'edit' %}" method="POST" action="">
 
     {% csrf_token %}
 
@@ -18,7 +18,7 @@
     <h4>Entry:</h4>
     <input class="markdown" type="text" name="e" value="{{entry}}">
     <br>
-            <a href="{% url 'save' %}"  type="submit">Save Page</a>
+        <button onclick="views.save_entry"> Submit</button>
 </form>
 
 {% endblock %}

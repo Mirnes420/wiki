@@ -44,10 +44,7 @@ def get_title(entry):
     return title[0]
 
 def remove_title(entry):
-    content = ""
-    for i in [entry]:
-       content += i +'hi'
-    return content
+    return entry.replace(get_title(entry), "")
 
 
 def prev_url():
