@@ -1,0 +1,23 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+
+    Entries
+
+{% endblock %}
+
+{% block body %}
+
+    <h1> {{ title }} </h1>
+    <hr style="background-color:cadetblue">
+    <h5 style="color:white">{{ entry }}</h5>
+    <br>
+    <div>
+        <a href="{% url 'edit' %}">Edit Page</a>
+    </div>
+    <br>
+    <div>
+        <a style="color:red" href="{% url 'delete' %}">Delete Page</a>
+    </div>
+
+{% endblock %}
