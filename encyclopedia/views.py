@@ -1,120 +1,142 @@
-from http.client import HTTPResponse
 import random
 from django import forms
 from encyclopedia import util
 from django.urls import reverse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 
+# defining an index page that returns a list of all existing entries
 
 def index(request):
     return render(request, "encyclopedia/index.html", {
         "entries": util.list_entries()
     })
-#done
+
+# defining a function that gets content and returns that title's entry
 
 def get_by_title(request, title):
-    entry = util.get_entry(title)
-    content = ""
-    """for i in entry:
-        if i[0] == '#':
-            content +=  ' </h5> <h3> '+ i + ' </h3> <h5 style="color:white">'
-        else:
-            content += i"""
+    content = util.get_entry(title)
     return render(request, "encyclopedia/entries.html", {
-        "entry": util.remove_title(entry), 
-        "title": util.get_title(entry)
+        "content": util.remove_title(content), 
+        "title": util.get_title(content)
     })
-#done
+
+# defining a function that gives us a random entry from all entries
 
 def random_entry(request):
-    entry = util.get_entry(random.choice(util.list_entries()))
-    title = util.get_title(entry)
+    random_entry = util.get_entry(random.choice(util.list_entries()))
+    title = util.get_title(random_entry)
     return render(request, "encyclopedia/entries.html", {
-        "entry": util.remove_title(entry), 
+        "content": util.remove_title(random_entry), 
         "title": title
     })
-#done
+
+# defining form classes used in create_entry function
+
 class NewTitle(forms.Form):
     title = forms.CharField(label="Title")
 
 class NewContent(forms.Form):
-    entry = forms.CharField(label="Content")
-#done
+    content = forms.CharField(label="Content")
+
+# defining a function that lets us create a new entry
 
 def create_entry(request):
+
+    # if POST, saving that value
+
     if request.method == "POST" :
         title = NewTitle(request.POST)
-        entry = NewContent(request.POST)
-        if title.is_valid() and entry.is_valid():
+        content = NewContent(request.POST)
+        if title.is_valid() and content.is_valid():
             title = title.cleaned_data["title"]
-            entry = "# " + title + f"\n\n" + entry.cleaned_data["entry"]
-            util.save_entry(title, entry)
+            content = "# " + title + f"\n\n" + content.cleaned_data["content"]
+            util.save_entry(title, content)
             return HttpResponseRedirect(reverse("index"))
         else:
             prev_url = request.META.get('HTTP_REFERER').split('/')
             title = prev_url[-1]
             return get_by_title(title)
 
+    #  if GET, giving us a form with no values
+
     return render(request, "encyclopedia/create.html", {
         "title": NewTitle(),
-        "entry": NewContent()
+        "content": NewContent()
     })
-#done
+
+# defining a search query
 
 def search(request):
     query = request.GET.get('q')
     filename = f"entries/{query}.md"
+
     # Defining a function for map() function above
+
     def find(result):
+
         # Making a search case insesnitive
+
         if query.lower() in result.lower():
             return result
         else:
             return ''
+        
+    # if query exist, return it
 
     if default_storage.exists(filename):
-        entry = util.get_entry(query)
+        content = util.get_entry(query)
         return render(request, "encyclopedia/entries.html", {
-            "title": util.get_title(entry),
-            "entry": util.remove_title(entry)
+            "title": util.get_title(content),
+            "content": util.remove_title(content)
             })
+
+    # returns all entries where query occured
+
     else:
         all_entries = util.list_entries()
         search_result = []
         for i in map(find, all_entries):
             if len(i) > 0:
                 search_result.append(i)
+
+        # if empty search result, returns a message
+
         if len(search_result) == 0:
-            search_result.append(f'No items matched for"{query}"!')
-            
-        return render(request, "encyclopedia/searchbar.html", { 
+            search_result.append(f'Error 404. "{query}" not found anywhere!')
+
+        return render(request, "encyclopedia/searchbar.html", {
             "search_result": search_result
             })
-#done
+
+# defining an edit page
+
 def edit_entry(request):
+    
+    # getting a page that needs to be edited by taking the last part of the previous URL, which is a title of the last page visited
+
     prev_url =  request.META.get('HTTP_REFERER').replace("%20", " ").split("/")
 
     if request.method == 'GET':
         title = prev_url[-1]
-        entry = util.get_entry(title)
-        entry = util.remove_title(entry)
+        content = util.get_entry(title)
+        content = util.remove_title(content)
         return render(request, "encyclopedia/edit.html", {
         "title": title, 
-        "entry": entry
+        "content": content
         })
     elif request.method == "POST" :
-        title = request.POST.get('t')
-        entry = request.POST.get('e')
-        entry = "# " + title + f"\n\n" + entry
-        util.save_entry(title, entry)
+        new_title = request.POST.get('t')
+        new_content = request.POST.get('c')
+        new_content = "# " + new_title + f"\n\n" + new_content
+        util.save_entry(new_title, new_content)
         return render(request, "encyclopedia/entries.html", {
-        "title": title, 
-        "entry": entry
+        "title": util.get_title(new_content), 
+        "content": util.remove_title(new_content)
         })
-      
+
+# defining a function that deletes entry
 
 def delete_entry(request):
     prev_url =  request.META.get('HTTP_REFERER').replace("%20", " ").split("/")
@@ -122,4 +144,6 @@ def delete_entry(request):
     if default_storage.exists(filename):
         default_storage.delete(filename)
         return HttpResponseRedirect(reverse("index"))
+    return HttpResponseRedirect(reverse("index"))
+    
     

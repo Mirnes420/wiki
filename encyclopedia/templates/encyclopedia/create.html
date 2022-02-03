@@ -10,7 +10,7 @@
 <form action="{% url 'create' %}" method="post">
     {% csrf_token %}
     {{ title }}
-    {{ entry }}
+    {{ content }}
             <button onclick="util.save_entry">Save</button>
 </form>
 

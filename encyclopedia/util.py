@@ -1,8 +1,8 @@
 import re
-
+from django.http import request
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
-from django.http import request
+
 
 
 def list_entries():
@@ -37,21 +37,19 @@ def get_entry(title):
     except FileNotFoundError:
         return f'Error 404. "{title}" not found!'
 
-def get_title(entry):
+
+def get_title(content):
+    """
+    Retrieves a title from a given content.
+    """
     title = []
-    for i in entry.split("\n"):
+    for i in content.split("\n"):
         title.append(i) 
     return title[0]
 
-def remove_title(entry):
-    return entry.replace(get_title(entry), "")
+def remove_title(content):
+    """
+    Removes a title from a given content.
+    """
+    return content.replace(get_title(content), "")
 
-
-def prev_url():
-    url = request.META.get('HTTP_REFERER').split('/')
-    title = url[-1]
-    try:
-        default_storage.open(f"entries/{title}.md")
-    except FileNotFoundError:
-        return None
-    return title
