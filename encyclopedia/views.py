@@ -3,7 +3,7 @@ from django import forms
 from encyclopedia import util
 from django.urls import reverse
 from django.shortcuts import redirect, render
-from django.http import HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect
 from django.core.files.storage import default_storage
 
 # defining an index page that returns a list of all existing entries
@@ -49,7 +49,7 @@ class NewContent(forms.Form):
 
 def create_entry(request):
 
-    # if POST, saving that value
+    # if request method is POST, saving that value
 
     if request.method == "POST" :
         title = NewTitle(request.POST)
@@ -109,7 +109,9 @@ def search(request):
         # if empty search result, returns a message
 
         if len(search_result) == 0:
-            search_result.append(f'Error 404. "{query}" not found anywhere!')
+           return render(request, "encyclopedia/error.html", {
+            "content": query
+            })
 
         return render(request, "encyclopedia/searchbar.html", {
             "search_result": search_result

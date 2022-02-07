@@ -1,9 +1,8 @@
 import re
-from django.http import request
 from django.shortcuts import redirect
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
-from django.http import HttpResponse, HttpResponseNotFound, Http404
+from django.http import  Http404
 
 
 
