@@ -7,13 +7,13 @@
 {% endblock %}
 
 {% block body %}
-<form action="{% url 'create' %}" method="post" style="text-align: center; color: #0066CC; font-size: 15px;">
+<form class="form" action="{% url 'create' %}" method="post" style="text-align: center; font-size: 18px;">
     {% csrf_token %}
     {{ title }} 
     {{ content }}
     <br>
     <br>
-            <button onclick="util.save_entry" style="color: #0066CC; background-color:transparent;">Save</button>
+            <button class="fa fa-save button" onclick="util.save_entry"> Save </button>
 </form>
 
 {% endblock %}

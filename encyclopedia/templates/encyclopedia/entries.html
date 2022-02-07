@@ -13,11 +13,10 @@
     <h5 style="color:white">{{ content }}</h5>
     <br>
     <div>
-        <a href="{% url 'edit' %}">Edit Page</a>
+        <a class="fa fa-edit" href="{% url 'edit' %}">  Edit Page</a>
     </div>
-    <br>
     <div>
-        <a style="color:red" href="{% url 'delete' %}">Delete Page</a>
+        <a style="color:rgb(126, 4, 4)" class="fa fa-remove" href="{% url 'delete' %}">   Delete Page</a>
     </div>
 
 {% endblock %}

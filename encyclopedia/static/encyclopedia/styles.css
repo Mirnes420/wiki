@@ -1,6 +1,8 @@
 body {
-    margin: 0;
-    background-color: white;
+    font-family:-apple-system, BlinkMacSystemFont;
+    font-size: 18px;
+    color: #f4b41a;
+    background-image: linear-gradient(62deg, #143d59 0%, #181719 40%);
 }
 
 code {
@@ -8,6 +10,7 @@ code {
 }
 
 h1 {
+    color: #f2bc94;
     margin-top: 0px;
     padding-top: 20px;
 }
@@ -28,11 +31,35 @@ textarea {
 }
 
 .sidebar {
-    background-color: #f0f0f0;
+    background-color:#01263d;
+    font-size: 17px;
     height: 100vh;
     padding: 20px;
 }
 
 .sidebar h2 {
     margin-top: 5px;
+}
+
+
+a{
+    color: #f4b41a;
+}
+a:hover{
+    color:#f4b41a;
+}
+
+.button {
+background-color: transparent;
+border: none;
+color: white;
+padding: 15px 32px;
+text-align: center;
+text-decoration: none;
+display: inline-block;
+font-size: 20px;
+}
+
+.form{
+    margin:10px;
 }
