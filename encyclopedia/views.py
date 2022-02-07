@@ -2,7 +2,7 @@ import random
 from django import forms
 from encyclopedia import util
 from django.urls import reverse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.http import HttpResponseRedirect
 from django.core.files.storage import default_storage
 
@@ -26,11 +26,16 @@ def get_by_title(request, title):
 
 def random_entry(request):
     random_entry = util.get_entry(random.choice(util.list_entries()))
-    title = util.get_title(random_entry)
-    return render(request, "encyclopedia/entries.html", {
-        "content": util.remove_title(random_entry), 
-        "title": title
-    })
+    title = ""
+    potential_title = util.get_title(random_entry).split()[1:]
+    for i in potential_title:
+        if i != potential_title[-1]:
+            title += i + " "
+        else:
+            title += i
+
+    return redirect(reverse('title_name', kwargs={'title' : title}))
+    
 
 # defining form classes used in create_entry function
 

@@ -1,3 +1,3 @@
 # Ruby
 
-Ruby is a 
+Ruby is a programming God

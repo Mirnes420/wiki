@@ -1,7 +1,9 @@
 import re
 from django.http import request
+from django.shortcuts import redirect
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
+from django.http import HttpResponse, HttpResponseNotFound, Http404
 
 
 
@@ -35,8 +37,7 @@ def get_entry(title):
         f = default_storage.open(f"entries/{title}.md")
         return f.read().decode("utf-8")
     except FileNotFoundError:
-        return f'Error 404. "{title}" not found!'
-
+        raise Http404(f"{title} not found")
 
 def get_title(content):
     """
