@@ -1,5 +1,6 @@
 import random
 from django import forms
+import markdown
 from encyclopedia import util
 from django.urls import reverse
 from django.shortcuts import redirect, render
@@ -127,21 +128,20 @@ def edit_entry(request):
 
     if request.method == 'GET':
         title = prev_url[-1]
+        markdownify = markdown.Markdown()
         content = util.get_entry(title)
         content = util.remove_title(content)
         return render(request, "encyclopedia/edit.html", {
         "title": title, 
-        "content": content
+        "content": markdownify.convert(content)
         })
     elif request.method == "POST" :
         new_title = request.POST.get('t')
         new_content = request.POST.get('c')
         new_content = "# " + new_title + f"\n\n" + new_content
         util.save_entry(new_title, new_content)
-        return render(request, "encyclopedia/entries.html", {
-        "title": util.get_title(new_content), 
-        "content": util.remove_title(new_content)
-        })
+        return redirect(reverse('title_name', kwargs={'title' : new_title}))
+
 
 # defining a function that deletes entry
 

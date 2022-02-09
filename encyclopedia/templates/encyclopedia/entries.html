@@ -7,10 +7,11 @@
 {% endblock %}
 
 {% block body %}
+{% load markdownify %}
 
     <h1> {{ title }} </h1>
     <hr style="background-color:cadetblue">
-    <h5 style="color:white">{{ content }}</h5>
+    <h5 style="color:white">{{ content|markdownify|safe }}</h5>
     <br>
     <div>
         <a class="fa fa-edit" href="{% url 'edit' %}">  Edit Page</a>

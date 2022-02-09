@@ -47,9 +47,17 @@ def get_title(content):
         title.append(i) 
     return title[0]
 
-def remove_title(content):
-    """
+def remove_title(param):
+    return param.replace(get_title(param), "")
+    ''' 
     Removes a title from a given content.
     """
-    return content.replace(get_title(content), "")
+    content = ""
+
+    potential_content = []
+    for i in param:
+        potential_content += i
+    potential_content = param.split()[1:]
+    for i in potential_content:
+        content+= i + '''
 
