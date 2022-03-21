@@ -63,3 +63,8 @@ font-size: 20px;
 .form{
     margin:10px;
 }
+
+.padding{
+    padding-top: 2em;
+    padding-left: 70px;
+}
